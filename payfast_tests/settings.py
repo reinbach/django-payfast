@@ -5,7 +5,11 @@ import sys
 from distutils.version import StrictVersion
 
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
-join = lambda p: os.path.abspath(os.path.join(PROJECT_ROOT, p))
+
+
+def join(path):
+    return os.path.abspath(os.path.join(PROJECT_ROOT, path))
+
 
 # use package from the folder above, not the installed version
 sys.path.insert(0, join('..'))
@@ -24,8 +28,8 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',  # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': join('db.sqlite'),                      # Or path to database file if using sqlite3.
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': join('db.sqlite'),
     }
 }
 
@@ -81,11 +85,10 @@ INSTALLED_APPS = [
     'payfast',
 ]
 
-import django
 if django.VERSION < (1, 7):
     # test migrations if South is available
     try:
-        import south
+        import south  # noqa
         if 'south' not in INSTALLED_APPS:
             INSTALLED_APPS += ['south']
     except ImportError:
