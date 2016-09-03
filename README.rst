@@ -22,13 +22,21 @@ or ::
     $ python setup.py install
 
 
-Then add ``payfast`` to INSTALLED_APPS and execute ::
+Then add ``payfast`` and ``django.contrib.sites`` to INSTALLED_APPS then execute ::
 
     $ python manage.py migrate payfast
 
 of (if running earlier version of Django without South) ::
 
     $ python manage.py syncdb
+
+In order to get notify URL up and running, include ``payfast.urls`` in your ``urls.py``::
+
+    urlpatterns = patterns('',
+        #...
+        url(r'^payfast/', include('payfast.urls')),
+        #...
+    )
 
 
 Settings
@@ -121,7 +129,7 @@ Order handling should be performed in ``payfast.signals.data`` signal handler.
 ``payfast.signals.notify`` signal
 ---------------------------------
 
-When PayFast posts data to the Notify URL ``payfast.signals.notify`` signal
+When PayFast posts data to the notify URL, a ``payfast.signals.notify`` signal
 is sent. This signal won't be sent for suspicious data (when request is
 coming from untrusted ip, form validation fails or the payment is duplicate).
 
@@ -147,15 +155,3 @@ Example::
             # ...
 
     payfast.signals.notify.connect(notify_handler)
-
-
-urls.py
--------
-
-In order to get Notify URL up and running, include ``payfast.urls`` in your ``urls.py``::
-
-    urlpatterns = patterns('',
-        #...
-        url(r'^payfast/', include('payfast.urls')),
-        #...
-    )
