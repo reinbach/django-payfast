@@ -2,7 +2,7 @@
 django-payfast
 ==============
 
-A pluggable Django application for integrating payfast.co.za payment system.
+A pluggable Django application for integrating https://www.payfast.co.za payment system.
 
 Install
 =======
@@ -22,13 +22,14 @@ or ::
     $ python setup.py install
 
 
-Then add 'payfast' to INSTALLED_APPS and execute ::
+Then add ``payfast`` to INSTALLED_APPS and execute ::
+
+    $ python manage.py migrate payfast
+
+of (if running earlier version of Django without South) ::
 
     $ python manage.py syncdb
 
-or (if South is in use) ::
-
-    $ python manage.py migrate payfast
 
 Settings
 ========
@@ -40,14 +41,14 @@ Specify your credentials in settings.py:
 
 If your web server is behind reverse proxy you should also specify
 ``PAYFAST_IP_HEADER`` option. It's a ``request.META`` key with client ip address
-(default is 'REMOTE_ADDR').
+(default is ``REMOTE_ADDR``).
 
 There is an option with PayFast server IP addresses (``PAYFAST_IP_ADDRESSES``).
 It is a list with current PayFast servers' ip addresses. If they will
 change then override this option in your settings.py.
 
 You also have to setup your PayFast account on payfast.co.za. Login into the
-admin panel, go to 'My Account -> Integration', enable the Instant Transaction
+admin panel, go to `My Account -> Integration`, enable the Instant Transaction
 Notification (ITN) and provide the Notify URL.
 
 Usage
@@ -56,13 +57,13 @@ Usage
 Payment form
 ------------
 
-payfast.forms.PayFastForm can be used to construct the html form. It is
+``payfast.forms.PayFastForm`` can be used to construct the html form. It is
 a helper form for html output and it shouldn't perform any validation.
 
-Pass all the fields to form 'initial' argument. Form also has an optional
-'user' parameter: it is the User instance the order is purchased by. If
-'user' is specified, 'name_first', 'name_last' and 'email_address' fields
-will be filled automatically if they are not passed with 'initial'.
+Pass all the fields to form ``initial`` argument. Form also has an optional
+``user`` parameter: it is the User instance the order is purchased by. If
+``user`` is specified, ``name_first``, ``name_last``, and ``email_address`` fields
+will be filled automatically if they are not passed with ``initial``.
 
 Example::
 
@@ -94,9 +95,9 @@ Example::
 
         return direct_to_template(request, 'pay_with_payfast.html', {'form': form})
 
-Please refer to PayFast docs (http://www.payfast.co.za/c/std/website-payments-variables)
-for more options. 'merchant_id', 'merchant_key', 'notify_url' and
-'signature' params are handled automatically.
+Please refer to `PayFast docs <https://www.payfast.co.za/documentation/confirm-page/>`_
+for more options. ``merchant_id``, ``merchant_key``, ``notify_url`` and
+``signature`` params are handled automatically.
 
 
 The template::
@@ -110,9 +111,9 @@ The template::
         </form>
     {% endblock %}
 
-The {{ form.as_p }} output will be a number of ``<input type='hidden'>`` tags.
+The ``{{ form.as_p }}`` output will be a number of ``<input type='hidden'>`` tags.
 
-PayFastForm has a 'target' attribute with PayFast server URL.
+PayFastForm has a ``target`` attribute with PayFast server URL.
 
 Please note that it's up to you to implement the order processing logic.
 Order handling should be performed in ``payfast.signals.data`` signal handler.
@@ -124,7 +125,7 @@ When PayFast posts data to the Notify URL ``payfast.signals.notify`` signal
 is sent. This signal won't be sent for suspicious data (when request is
 coming from untrusted ip, form validation fails or the payment is duplicate).
 
-Signal subscribers will get an 'order' argument with ``PayFastOrder`` instance.
+Signal subscribers will get an ``order`` argument with ``PayFastOrder`` instance.
 
 Example::
 
@@ -151,7 +152,7 @@ Example::
 urls.py
 -------
 
-In order to get Notify URL up and running, include payfast.urls in your urls.py::
+In order to get Notify URL up and running, include ``payfast.urls`` in your ``urls.py``::
 
     urlpatterns = patterns('',
         #...
