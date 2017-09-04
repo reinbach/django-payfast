@@ -163,9 +163,9 @@ class NotifyForm(forms.ModelForm):
 
         # Django 1.3 adds read() to get the request body.
         if django.VERSION < (1, 3):
-            self.instance.debug_info = self.request.raw_post_data
+            self.instance.debug_info = self.request.raw_post_data[:255]
         else:
-            self.instance.debug_info = self.request.read()
+            self.instance.debug_info = self.request.read()[:255]
 
         self.instance.trusted = True
         return super(NotifyForm, self).save(*args, **kwargs)
